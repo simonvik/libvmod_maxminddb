@@ -1,0 +1,3 @@
+$Module geoip 3 Varnish Parse Request Module
+$Init init_function
+$Function BOOL req_ok(PRIV_VCL)

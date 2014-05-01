@@ -1,17 +1,17 @@
 AM_CPPFLAGS = @VMOD_INCLUDES@
 
 vmoddir = @VMOD_DIR@
-vmod_LTLIBRARIES = libvmod_geoip.la
+vmod_LTLIBRARIES = libvmod_maxminddb.la
 
-libvmod_geoip_la_LDFLAGS = -module -export-dynamic -avoid-version -lmhash
+libvmod_maxminddb_la_LDFLAGS = -module -export-dynamic -avoid-version -lmhash
 
-libvmod_geoip_la_SOURCES = \
+libvmod_maxminddb_la_SOURCES = \
 	vcc_if.c \
 	vcc_if.h \
-	vmod_geoip.c
+	vmod_maxminddb.c
 
-vcc_if.c vcc_if.h: @VMODTOOL@ $(top_srcdir)/src/vmod_geoip.vcc
-	@VMODTOOL@ $(top_srcdir)/src/vmod_geoip.vcc
+vcc_if.c vcc_if.h: @VMODTOOL@ $(top_srcdir)/src/vmod_maxminddb.vcc
+	@VMODTOOL@ $(top_srcdir)/src/vmod_maxminddb.vcc
 
 VMOD_TESTS = tests/*.vtc
 .PHONY: $(VMOD_TESTS)
@@ -22,9 +22,9 @@ tests/*.vtc:
 check: $(VMOD_TESTS)
 
 EXTRA_DIST = \
-	vmod_geoip.vcc \
+	vmod_maxminddb.vcc \
 	$(VMOD_TESTS)
 
 CLEANFILES = $(builddir)/vcc_if.c $(builddir)/vcc_if.h \
-	$(builddir)/vmod_geoip.man.rst \
-	$(builddir)/vmod_geoip.rst
+	$(builddir)/vmod_maxminddb.man.rst \
+	$(builddir)/vmod_maxminddb.rst

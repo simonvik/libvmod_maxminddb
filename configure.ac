@@ -1,8 +1,8 @@
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (c) 2011 Varnish Software AS])
-AC_INIT([libvmod-geoip], [0.3])
+AC_INIT([libvmod-maxminddb], [0.3])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR(src/vmod_geoip.vcc)
+AC_CONFIG_SRCDIR(src/vmod_maxminddb.vcc)
 AM_CONFIG_HEADER(config.h)
 
 AC_CANONICAL_SYSTEM
@@ -23,7 +23,7 @@ AC_PROG_LIBTOOL
 AC_PROG_MAKE_SET
 
 AC_CHECK_LIB(mhash, mhash_count, [AC_DEFINE([HAVE_MHASH],[1],[Define we have mhash])],
-		[AC_MSG_ERROR([libvmod-geoip requires libmhash.])])
+		[AC_MSG_ERROR([libvmod-maxminddb requires libmhash.])])
 # Check for rst utilities
 AC_CHECK_PROGS(RST2MAN, [rst2man rst2man.py], "no")
 if test "x$RST2MAN" = "xno"; then

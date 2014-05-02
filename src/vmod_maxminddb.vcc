@@ -1,3 +1,4 @@
-$Module geoip 3 Varnish Parse Request Module
+$Module maxminddb 3 maxminddb
 $Init init_function
-$Function BOOL req_ok(PRIV_VCL)
+$Function STRING query(PRIV_VCL, IP)
+

@@ -6,41 +6,74 @@
 #include "cache/cache.h"
 #include "vcc_if.h"
 #include "config.h"
+#include "vsa.h"
+
+#include <maxminddb.h>
+#define GI_UNKNOWN_STRING "Unknown"
+
+void freeit(void *data){
+	MMDB_close(data);
+	free(data);
+}
 
 
-
-int 
-body_iterator(struct req *req, void *priv, void *buf, size_t size)
-{
-	if(size == 0)
+int
+open_db(struct vmod_priv *priv){
+	priv->priv = (MMDB_s *)malloc(sizeof(MMDB_s));
+	priv->free = freeit;
+	if(MMDB_open("/home/simon/GeoLite2-City.mmdb", MMDB_MODE_MMAP, priv->priv) != MMDB_SUCCESS)
 		return 0;
 
-	if(strstr((char*) buf, "viagra") != NULL){
-		return 1000;
-	}
+	return 1;
 }
 
-
-
-VCL_BOOL
-vmod_req_ok(const struct vrt_ctx *ctx, struct vmod_priv *priv)
+int
+lookup_country(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry)
 {
+	static const char *country_path[] = { "country", "iso_code", NULL };
+	int error, r;
+	char *result;
+	socklen_t sl;
+	const struct sockaddr *sa;
+	MMDB_lookup_result_s s;
 
-	//unsigned char *str;
-	//str = WS_Copy(ctx->ws, "hello", 6);
 
-	//HTTP1_IterateReqBody(struct req *req, req_body_iter_f *func, void *priv)
-	//typedef int (req_body_iter_f)(struct req *, void *priv, void *ptr, size_t);
-	//i = func(req, priv, buf, l);
+	if (NULL == (sa = VSA_Get_Sockaddr(ip, &sl)))
+		return 0;
 
-	if(ctx->req->req_bodybytes <= 1024){
-		if(HTTP1_IterateReqBody(ctx->req, body_iterator, priv) >= 1000){
-			return 1;
-		}
+	s = MMDB_lookup_sockaddr(db, sa, &error);
+
+	if(!s.found_entry)
+		return 0;
+
+	r = MMDB_aget_value(&s.entry, entry, country_path);
+
+	if (r != MMDB_SUCCESS || !entry->has_data)
+		return 0;
+
+	if(entry->type != MMDB_DATA_TYPE_UTF8_STRING )
+		return 0;
+
+	return 1;
+}
+
+VCL_STRING
+vmod_query(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+{
+	MMDB_entry_data_s entry;
+
+	if(!priv->priv){
+		open_db(priv);
 	}
 
-	return 0;
+
+	if(!lookup_country(priv->priv, ip, &entry))
+		return WS_Copy(ctx->ws, "-", 2);
+
+	return WS_Copy(ctx->ws, entry.utf8_string, entry.data_size);
 }
+
+
 
 int
 init_function(struct vmod_priv *priv, const struct VCL_conf *conf)

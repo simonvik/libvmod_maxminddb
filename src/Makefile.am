@@ -3,7 +3,7 @@ AM_CPPFLAGS = @VMOD_INCLUDES@
 vmoddir = @VMOD_DIR@
 vmod_LTLIBRARIES = libvmod_maxminddb.la
 
-libvmod_maxminddb_la_LDFLAGS = -module -export-dynamic -avoid-version -lmhash
+libvmod_maxminddb_la_LDFLAGS = -module -export-dynamic -avoid-version -lmaxminddb
 
 libvmod_maxminddb_la_SOURCES = \
 	vcc_if.c \

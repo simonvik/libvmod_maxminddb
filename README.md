@@ -17,3 +17,13 @@ You need libmaxminddb in order to build this.
  make
  make install
 ```
+
+Usage:
+=================
+```
+sub vcl_recv {
+        set req.http.countrycode = maxminddb.query(client.ip);
+        return (synth(200, req.http.countrycode));
+}
+
+```

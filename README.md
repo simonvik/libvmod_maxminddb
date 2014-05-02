@@ -7,7 +7,7 @@ I have no clue what I'm doing, will most likely be insecure.
 
 
 Build:
-./autogen.sh
-./configure  VMOD_DIR=/usr/lib/varnish/vmods/
-make
-make install
+  ./autogen.sh
+  ./configure  VMOD_DIR=/usr/lib/varnish/vmods/
+  make
+  make install

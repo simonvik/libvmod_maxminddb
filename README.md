@@ -21,6 +21,8 @@ You need libmaxminddb in order to build this.
 Usage:
 =================
 ```
+import maxminddb;
+
 sub vcl_recv {
         set req.http.countrycode = maxminddb.query(client.ip);
         return (synth(200, req.http.countrycode));

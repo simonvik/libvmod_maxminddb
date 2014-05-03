@@ -18,16 +18,6 @@ void freeit(void *data){
 
 
 int
-open_db(struct vmod_priv *priv){
-	priv->priv = (MMDB_s *)malloc(sizeof(MMDB_s));
-	priv->free = freeit;
-	if(MMDB_open("/home/simon/GeoLite2-City.mmdb", MMDB_MODE_MMAP, priv->priv) != MMDB_SUCCESS)
-		return 0;
-
-	return 1;
-}
-
-int
 lookup_country(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry)
 {
 	static const char *country_path[] = { "country", "iso_code", NULL };
@@ -57,17 +47,24 @@ lookup_country(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry)
 	return 1;
 }
 
+//$Function VOID   init_db(PRIV_VCL, STRING)
+
+VCL_VOID
+vmod_init_db(const struct vrt_ctx *ctx, struct vmod_priv *priv, const char *filename){
+	priv->priv = (MMDB_s *)malloc(sizeof(MMDB_s));
+	if(MMDB_open(filename, MMDB_MODE_MMAP, priv->priv) != MMDB_SUCCESS){
+		free(priv->priv);
+		return;
+	}
+	priv->free = freeit;
+}
+
 VCL_STRING
 vmod_query(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
 {
 	MMDB_entry_data_s entry;
 
-	if(!priv->priv){
-		open_db(priv);
-	}
-
-
-	if(!lookup_country(priv->priv, ip, &entry))
+	if(!priv->priv || !lookup_country(priv->priv, ip, &entry))
 		return WS_Copy(ctx->ws, "-", 2);
 
 	return WS_Copy(ctx->ws, entry.utf8_string, entry.data_size);

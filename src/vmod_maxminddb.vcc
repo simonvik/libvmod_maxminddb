@@ -1,4 +1,4 @@
 $Module maxminddb 3 maxminddb
 $Init init_function
+$Function VOID   init_db(PRIV_VCL, STRING)
 $Function STRING query(PRIV_VCL, IP)
-

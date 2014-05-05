@@ -52,7 +52,7 @@ VCL_VOID
 vmod_init_db(const struct vrt_ctx *ctx, struct vmod_priv *priv, const char *filename)
 {
 	priv->priv = (MMDB_s *)calloc(1, sizeof(MMDB_s));
-	if (ptr == NULL)
+	if (priv->priv == NULL)
 		return;
 
 	if(MMDB_open(filename, MMDB_MODE_MMAP, priv->priv) != MMDB_SUCCESS){

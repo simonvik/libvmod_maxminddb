@@ -9,9 +9,10 @@
 #include "vsa.h"
 
 #include <maxminddb.h>
-#define GI_UNKNOWN_STRING "Unknown"
 
-void freeit(void *data){
+void
+freeit(void *data)
+{
 	MMDB_close(data);
 	free(data);
 }
@@ -47,11 +48,13 @@ lookup_country(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry)
 	return 1;
 }
 
-//$Function VOID   init_db(PRIV_VCL, STRING)
-
 VCL_VOID
-vmod_init_db(const struct vrt_ctx *ctx, struct vmod_priv *priv, const char *filename){
-	priv->priv = (MMDB_s *)malloc(sizeof(MMDB_s));
+vmod_init_db(const struct vrt_ctx *ctx, struct vmod_priv *priv, const char *filename)
+{
+	priv->priv = (MMDB_s *)calloc(1, sizeof(MMDB_s));
+	if (ptr == NULL)
+		return;
+
 	if(MMDB_open(filename, MMDB_MODE_MMAP, priv->priv) != MMDB_SUCCESS){
 		free(priv->priv);
 		return;
@@ -69,8 +72,6 @@ vmod_query(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct sucka
 
 	return WS_Copy(ctx->ws, entry.utf8_string, entry.data_size);
 }
-
-
 
 int
 init_function(struct vmod_priv *priv, const struct VCL_conf *conf)

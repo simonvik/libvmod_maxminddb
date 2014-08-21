@@ -5,7 +5,9 @@ Varnish 4 vmod for loading maxminddb (geoip2)
 
 **I have no clue what I'm doing, will most likely be insecure.**
 
-
+Requirement:
+=================
+Packages: build-essential libtool libvarnishapi-dev python-docutils 
 
 Build:
 =================

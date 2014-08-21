@@ -39,9 +39,9 @@ m4_pattern_allow([^VARNISH_VMOD(_INCLUDE_DIR|TOOL)$])
 PKG_CHECK_EXISTS([varnishapi],[],[
 	if test -n "$PKG_CONFIG"; then
 		AC_MSG_FAILURE(
-[The pkg-config script could not be found or is too old.  Make sure it
+[The pkg-config script could not be found or is too old or varnishapi is missing.  Make sure it
 is in your PATH or set the PKG_CONFIG environment variable to the full
-path to pkg-config.
+path to pkg-config and make sure the package libvarnishapi-dev is installed.
 
 To get pkg-config, see <http://pkg-config.freedesktop.org/>.])
 	else

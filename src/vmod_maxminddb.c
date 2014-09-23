@@ -19,9 +19,8 @@ freeit(void *data)
 
 
 int
-lookup_country(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry)
+lookup(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry, const char *path)
 {
-	static const char *country_path[] = { "country", "iso_code", NULL };
 	int error, r;
 	char *result;
 	socklen_t sl;
@@ -37,7 +36,7 @@ lookup_country(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry)
 	if(!s.found_entry)
 		return 0;
 
-	r = MMDB_aget_value(&s.entry, entry, country_path);
+	r = MMDB_aget_value(&s.entry, entry, path);
 
 	if (r != MMDB_SUCCESS || !entry->has_data)
 		return 0;
@@ -63,14 +62,35 @@ vmod_init_db(const struct vrt_ctx *ctx, struct vmod_priv *priv, const char *file
 }
 
 VCL_STRING
-vmod_query(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+vmod_query_common(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip, const char *path)
 {
 	MMDB_entry_data_s entry;
 
-	if(!priv->priv || !lookup_country(priv->priv, ip, &entry))
+	if(!priv->priv || !lookup(priv->priv, ip, &entry, path))
 		return WS_Copy(ctx->ws, "-", 2);
 
 	return WS_Copy(ctx->ws, entry.utf8_string, entry.data_size);
+}
+
+VCL_STRING
+vmod_query_country(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+{
+	static const char *country_path[] = { "country", "iso_code", NULL };
+	return vmod_query_common(ctx, priv, ip, country_path);
+}
+
+VCL_STRING
+vmod_query_city(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+{
+	static const char *city_path[] = { "city", "names", "en", NULL };
+	return vmod_query_common(ctx, priv, ip, city_path);
+}
+
+// keep function vmod_query() for compatibility
+VCL_STRING
+vmod_query(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+{
+	return vmod_query_country(ctx, priv, ip);
 }
 
 int

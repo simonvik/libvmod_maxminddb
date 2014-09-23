@@ -29,10 +29,9 @@ sub vcl_init{
   maxminddb.init_db("/path/to/GeoLite2-City.mmdb");
 }
 
-
 sub vcl_recv {
-  set req.http.countrycode = maxminddb.query(client.ip);
-  return (synth(200, req.http.countrycode));
+  set req.http.countrycode = maxminddb.query_country(client.ip);
+  set req.http.city = maxminddb.query_city(client.ip);
 }
 
 ```

@@ -9,13 +9,12 @@ Build-Depends: debhelper (>= 9),
  libtool
 Standards-Version: 3.9.4
 
-Package libvmod-maxminddb
+Package: libvmod-maxminddb
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends},
  dpkg (>= 1.15.6~)
 Depends: ${misc:Depends},
  ${shlibs:Depends}
-
 Multi-Arch: same
 Description: libvmod-maxminddb
 

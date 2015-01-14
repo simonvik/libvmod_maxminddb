@@ -13,17 +13,8 @@ libvmod_maxminddb_la_SOURCES = \
 vcc_if.c vcc_if.h: @VMODTOOL@ $(top_srcdir)/src/vmod_maxminddb.vcc
 	@VMODTOOL@ $(top_srcdir)/src/vmod_maxminddb.vcc
 
-VMOD_TESTS = tests/*.vtc
-.PHONY: $(VMOD_TESTS)
-
-tests/*.vtc:
-	@VARNISHTEST@ -Dvarnishd=@VARNISHD@ -Dvmod_topbuild=$(abs_top_builddir) $@
-
-check: $(VMOD_TESTS)
-
 EXTRA_DIST = \
-	vmod_maxminddb.vcc \
-	$(VMOD_TESTS)
+	vmod_maxminddb.vcc
 
 CLEANFILES = $(builddir)/vcc_if.c $(builddir)/vcc_if.h \
 	$(builddir)/vmod_maxminddb.man.rst \

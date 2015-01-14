@@ -1,0 +1,22 @@
+Source: libvmod-maxminddb
+Section: net
+Priority: optional
+Homepage: http://devsn.se
+Maintainer: Simon Vikstrom <sv>
+Build-Depends: debhelper (>= 9),
+ autotools-dev,
+ dh-autoreconf,
+ libtool
+Standards-Version: 3.9.4
+
+Package libvmod-maxminddb
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends},
+ dpkg (>= 1.15.6~)
+Depends: ${misc:Depends},
+ ${shlibs:Depends}
+
+Multi-Arch: same
+Description: libvmod-maxminddb
+
+

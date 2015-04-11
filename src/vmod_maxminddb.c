@@ -80,6 +80,13 @@ vmod_query_country(const struct vrt_ctx *ctx, struct vmod_priv *priv, const stru
 }
 
 VCL_STRING
+vmod_query_state(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+{
+	static const char *state_path[] = { "subdivisions", "0", "iso_code", NULL };
+	return vmod_query_common(ctx, priv, ip, state_path);
+}
+
+VCL_STRING
 vmod_query_city(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
 {
 	static const char *city_path[] = { "city", "names", "en", NULL };

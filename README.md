@@ -30,8 +30,11 @@ sub vcl_init{
 }
 
 sub vcl_recv {
+  set req.http.continentcode = maxminddb.query_continent(client.ip);
   set req.http.countrycode = maxminddb.query_country(client.ip);
+  set req.http.state = maxminddb.query_state(client.ip);
   set req.http.city = maxminddb.query_city(client.ip);
+  set req.http.postalcode = maxminddb.query_postalcode(client.ip);
 }
 
 ```

@@ -69,10 +69,10 @@ vmod_query_common(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struc
 	if(!priv->priv || !lookup(priv->priv, ip, &entry, path))
 		return WS_Copy(ctx->ws, "-", 2);
 
-        char temp[entry.data_size + 1];
-        memcpy(temp, entry.utf8_string, entry.data_size);
-        temp[entry.data_size] = '\0';
-        return WS_Copy(ctx->ws, temp, entry.data_size + 1);
+	char temp[entry.data_size + 1];
+	memcpy(temp, entry.utf8_string, entry.data_size);
+	temp[entry.data_size] = '\0';
+	return WS_Copy(ctx->ws, temp, entry.data_size + 1);
 
 }
 

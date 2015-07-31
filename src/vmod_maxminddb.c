@@ -77,6 +77,13 @@ vmod_query_common(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struc
 }
 
 VCL_STRING
+vmod_query_continent(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+{
+	static const char *continent_path[] = { "continent", "code", NULL };
+	return vmod_query_common(ctx, priv, ip, continent_path);
+}
+
+VCL_STRING
 vmod_query_country(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
 {
 	static const char *country_path[] = { "country", "iso_code", NULL };
@@ -95,6 +102,13 @@ vmod_query_city(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct 
 {
 	static const char *city_path[] = { "city", "names", "en", NULL };
 	return vmod_query_common(ctx, priv, ip, city_path);
+}
+
+VCL_STRING
+vmod_query_postalcode(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+{
+	static const char *postalcode_path[] = { "postal", "code", NULL };
+	return vmod_query_common(ctx, priv, ip, postalcode_path);
 }
 
 // keep function vmod_query() for compatibility

@@ -1,5 +1,5 @@
 $Module maxminddb 3 maxminddb
-$Init init_function
+$Event event_function
 $Function VOID   init_db(PRIV_VCL, STRING)
 $Function STRING query_continent(PRIV_VCL, IP)
 $Function STRING query_country(PRIV_VCL, IP)

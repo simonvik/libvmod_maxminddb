@@ -20,7 +20,7 @@ freeit(void *data)
 
 
 int
-lookup(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry, const char *path)
+lookup(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry, const char **path)
 {
 	int error, r;
 	char *result;
@@ -63,7 +63,7 @@ vmod_init_db(const struct vrt_ctx *ctx, struct vmod_priv *priv, const char *file
 }
 
 VCL_STRING
-vmod_query_common(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip, const char *path)
+vmod_query_common(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip, const char **path)
 {
 	MMDB_entry_data_s entry;
 

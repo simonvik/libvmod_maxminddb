@@ -3,11 +3,9 @@ libvmod_maxminddb
 
 Varnish 4 vmod for loading maxminddb (geoip2)
 
-**I have no clue what I'm doing, will most likely be insecure.**
-
 Requirement:
 =================
-Packages: build-essential libtool libvarnishapi-dev python-docutils 
+Packages: build-essential libtool libvarnishapi-dev python-docutils libmaxminddb-dev libmaxminddb
 
 Build:
 =================
@@ -23,7 +21,13 @@ You need libmaxminddb in order to build this.
 Usage:
 =================
 ```
+vcl 4.0;
 import maxminddb;
+
+backend default {
+    .host = "127.0.0.1";
+    .port = "8080";
+}
 
 sub vcl_init{
   maxminddb.init_db("/path/to/GeoLite2-City.mmdb");

@@ -23,7 +23,6 @@ int
 lookup(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry, const char **path)
 {
 	int error, r;
-	char *result;
 	socklen_t sl;
 	const struct sockaddr *sa;
 	MMDB_lookup_result_s s;
@@ -124,3 +123,4 @@ event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
 {
 	return (0);
 }
+

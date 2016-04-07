@@ -6,7 +6,8 @@ Maintainer: Simon Vikstrom <sv>
 Build-Depends: debhelper (>= 9),
  autotools-dev,
  dh-autoreconf,
- libtool
+ libtool,
+ libmaxminddb-dev
 Standards-Version: 3.9.4
 
 Package: libvmod-maxminddb

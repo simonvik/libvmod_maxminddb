@@ -39,6 +39,8 @@ sub vcl_recv {
   set req.http.state = maxminddb.query_state(client.ip);
   set req.http.city = maxminddb.query_city(client.ip);
   set req.http.postalcode = maxminddb.query_postalcode(client.ip);
+  set resp.http.longitude = maxminddb.query_longitude(client.ip);
+  set resp.http.latitude = maxminddb.query_latitude(client.ip);
 }
 
 ```

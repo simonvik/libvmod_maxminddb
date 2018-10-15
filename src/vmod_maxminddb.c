@@ -82,7 +82,7 @@ vmod_query_common_real(const struct vrt_ctx *ctx, struct vmod_priv *priv, const 
 	MMDB_entry_data_s entry;
 
 	if(!priv->priv || !(lookup(priv->priv, ip, &entry, path, MMDB_DATA_TYPE_DOUBLE) || !lookup(priv->priv, ip, &entry, path, MMDB_DATA_TYPE_FLOAT)))
-		return WS_Copy(ctx->ws, "-", 3);
+		return WS_Copy(ctx->ws, "-", 2);
 
 	double value;
 	if (entry.type == MMDB_DATA_TYPE_DOUBLE)
@@ -90,11 +90,11 @@ vmod_query_common_real(const struct vrt_ctx *ctx, struct vmod_priv *priv, const 
 	else
 		value = (double)entry.float_value;
 
-	const int max_len = 16;
+	const int max_len = 9;
 	char temp[max_len];
 	int len = snprintf(temp, max_len, "%0.4f", value);
 	if (len < 0 || len >= max_len)
-		return WS_Copy(ctx->ws, "-", 3);
+		return WS_Copy(ctx->ws, "-", 2);
 
 	return WS_Copy(ctx->ws, temp, len + 1);
 }

@@ -20,7 +20,7 @@ freeit(void *data)
 
 
 int
-lookup(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry, const char **path)
+lookup(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry, const char **path, uint32_t type)
 {
 	int error, r;
 	socklen_t sl;
@@ -41,7 +41,7 @@ lookup(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry, const ch
 	if (r != MMDB_SUCCESS || !entry->has_data)
 		return 0;
 
-	if(entry->type != MMDB_DATA_TYPE_UTF8_STRING )
+	if(entry->type != type)
 		return 0;
 
 	return 1;
@@ -66,7 +66,7 @@ vmod_query_common(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struc
 {
 	MMDB_entry_data_s entry;
 
-	if(!priv->priv || !lookup(priv->priv, ip, &entry, path))
+	if(!priv->priv || !lookup(priv->priv, ip, &entry, path, MMDB_DATA_TYPE_UTF8_STRING))
 		return WS_Copy(ctx->ws, "-", 2);
 
 	char temp[entry.data_size + 1];
@@ -74,6 +74,29 @@ vmod_query_common(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struc
 	temp[entry.data_size] = '\0';
 	return WS_Copy(ctx->ws, temp, entry.data_size + 1);
 
+}
+
+VCL_STRING
+vmod_query_common_real(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip, const char **path)
+{
+	MMDB_entry_data_s entry;
+
+	if(!priv->priv || !(lookup(priv->priv, ip, &entry, path, MMDB_DATA_TYPE_DOUBLE) || !lookup(priv->priv, ip, &entry, path, MMDB_DATA_TYPE_FLOAT)))
+		return WS_Copy(ctx->ws, "-A", 3);
+
+	double value;
+	if (entry.type == MMDB_DATA_TYPE_DOUBLE)
+		value = entry.double_value;
+	else
+		value = (double)entry.float_value;
+
+	const int max_len = 16;
+	char temp[max_len];
+	int len = snprintf(temp, max_len, "%0.4f", value);
+	if (len < 0 || len >= max_len)
+		return WS_Copy(ctx->ws, "-B", 3);
+
+	return WS_Copy(ctx->ws, temp, len + 1);
 }
 
 VCL_STRING
@@ -111,6 +134,20 @@ vmod_query_postalcode(const struct vrt_ctx *ctx, struct vmod_priv *priv, const s
 	return vmod_query_common(ctx, priv, ip, postalcode_path);
 }
 
+VCL_STRING
+vmod_query_latitude(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+{
+	static const char *latitude_path[] = { "location", "latitude", NULL };
+	return vmod_query_common_real(ctx, priv, ip, latitude_path);
+}
+
+VCL_STRING
+vmod_query_longitude(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
+{
+	static const char *longitude_path[] = { "location", "longitude", NULL };
+	return vmod_query_common_real(ctx, priv, ip, longitude_path);
+}
+
 // keep function vmod_query() for compatibility
 VCL_STRING
 vmod_query(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
@@ -123,4 +160,3 @@ event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
 {
 	return (0);
 }
-

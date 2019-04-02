@@ -1,15 +1,20 @@
-#include <stdlib.h>
+#include "config.h"
+
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include "vrt.h"
+#include <sys/socket.h>
+
+#include <maxminddb.h>
+
 #include "cache/cache.h"
-#include "vcc_if.h"
-#include "config.h"
+
 #include "vsa.h"
 #include "vcl.h"
 
-#include <maxminddb.h>
+#include "vcc_if.h"
 
 void
 freeit(void *data)

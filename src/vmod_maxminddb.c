@@ -159,9 +159,3 @@ vmod_query(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct sucka
 {
 	return vmod_query_country(ctx, priv, ip);
 }
-
-int
-event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
-{
-	return (0);
-}

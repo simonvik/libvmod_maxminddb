@@ -16,13 +16,19 @@
 
 #include "vcc_if.h"
 
-void
-freeit(void *data)
+static void
+myfree(VRT_CTX, void *data)
 {
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
 	MMDB_close(data);
 	free(data);
 }
 
+static const struct vmod_priv_methods mymethods[1] = {{
+	.magic = VMOD_PRIV_METHODS_MAGIC,
+	.type = "mmdb",
+	.fini = myfree
+}};
 
 int
 lookup(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry, const char **path, uint32_t type)
@@ -55,15 +61,17 @@ lookup(MMDB_s *db, const struct suckaddr *ip, MMDB_entry_data_s *entry, const ch
 VCL_VOID
 vmod_init_db(const struct vrt_ctx *ctx, struct vmod_priv *priv, const char *filename)
 {
-	priv->priv = (MMDB_s *)calloc(1, sizeof(MMDB_s));
-	if (priv->priv == NULL)
-		return;
+
+	if (priv->priv == NULL) {
+	        priv->priv = (MMDB_s *)calloc(1, sizeof(MMDB_s));
+		AN(priv->priv);
+	        priv->methods = mymethods;
+	}
 
 	if(MMDB_open(filename, MMDB_MODE_MMAP, priv->priv) != MMDB_SUCCESS){
 		free(priv->priv);
 		return;
 	}
-	priv->free = freeit;
 }
 
 VCL_STRING
@@ -158,10 +166,4 @@ VCL_STRING
 vmod_query(const struct vrt_ctx *ctx, struct vmod_priv *priv, const struct suckaddr *ip)
 {
 	return vmod_query_country(ctx, priv, ip);
-}
-
-int
-event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
-{
-	return (0);
 }
